@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Catalin's Articles</title>
+    <link rel="stylesheet" href="/static/design.css" th:href="@{/design.css}">
+</head>
+<body>
+<div id="TOP"><div th:replace="menu :: menu_template"></div></div>
+<div id="separation2">
+    <div id="c1.2"><a href="/index"><button class="btn-Home" id="btn-Home">HOME</button></a></div>
+    <div id="c3.2"><a href="/articles"><button id="btn-Return">Return</button></a></div>
+</div>
+</br>
+</br>
+<div style="margin-left:20px;">
+<!--  This is what an account with USER permissions sees  -->
+    <form th:if="${user.permission=='USER'} OR ${user.permission=='OWNER'}" method="post" action="/updateUser"
+    style="background-color:lightgray;padding:10px;margin-left:25px;border:1px solid black;border-radius:20px;
+            width:fit-content;font-family:'Jazz LET', sans-serif;font-weight:normal;text-align:center;">
+        <input name="userId" type="hidden" th:value="${user.userId}">
+        <div><label>Your username is:</label></div><br>
+        <div><input name="email" type="email" th:value="${user.email}"></div><br>
+        <div><label>Your password is:</label></div><br>
+        <div><input name="password" type="password" th:value="${user.password}"></div><br>
+        <input name="permission" type="hidden" th:value="${user.permission}">
+        <div><input type="submit" value="Change Information" style="background-color:lightgoldenrodyellow;border-radius:5px;"></div>
+    </form>
+
+<!--  This is what an account with ADMIN and OWNER permissions sees  -->
+    <div>
+        <table  th:if="${user.permission=='ADMIN'} OR ${user.permission=='OWNER'}" th:each="users,iStat:${userList}"
+                style="margin-bottom:10px;margin-left:10px;border-radius:5px;width:max-content;">
+            <div th:if="${users.permission=='USER'}">
+                <thead>
+
+                    <!--  This is the Table Head that the ADMIN sees  -->
+                    <tr th:if="${user.permission=='ADMIN'}" style="width:max-content;">
+                        <th style="width:150px;font-size:20px;border-radius:2px;padding-left:0;padding-right:0;">User Id</th>
+                        <th style="width:250px;font-size:20px;border-radius:2px;padding-left:0;padding-right:0;">User Email</th>
+                        <th style="width:250px;font-size:20px;border-radius:2px;padding-left:0;padding-right:0;">User Type</th>
+                        <th style="width:150px;font-size:20px;border-radius:2px;padding-left:0;padding-right:0;">Commands</th>
+                    </tr>
+
+                    <!--  This is the table head that the OWNER sees  -->
+                    <tr th:if=" ${user.permission=='OWNER'}" style="width:max-content;">
+                        <th style="width:150px;font-size:20px;border-radius:2px;padding-left:0;padding-right:0;">User Email:</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <!--  This is the table body that the ADMIN sees  -->
+                    <tr th:if="${user.permission=='ADMIN'}" style="width:150px;font-size:20px;border-radius:2px;background-color:lightgray;padding-left:0;padding-right:0;">
+                        <td  th:text="${users.userId}" style="width:150px;font-size:20px;border-radius:2px;background-color:lightgray;padding-left:0;padding-right:0;"></td>
+                        <td  th:text="${users.email}"  style="width:150px;font-size:20px;border-radius:2px;background-color:lightgray;padding-left:0;padding-right:0;"></td>
+                        <td th:text="${users.permission}" style="width:150px;font-size:20px;border-radius:2px;background-color:lightgray;padding-left:0;padding-right:0;"></td>
+                        <td style="width:150px;font-size:20px;border-radius:2px;background-color:lightgray;padding-left:0;padding-right:0;">
+                            <a th:if="users.permission"  th:href="@{'/deleteUser/'+${users.userId}}">
+                            <button onclick="return confirmDelete()" style="background-color:lightgoldenrodyellow;border-radius:5px;">Delete User</button>
+                            </a>
+                        </td>
+                    </tr>
+
+                    <!--  This is the table body that the OWNER sees  -->
+                    <tr th:if="${users.permission=='USER'} AND ${user.permission=='OWNER'}" style="width:max-content;">
+                        <td style="width:150px;font-size:20px;border-radius:2px;background-color:lightgray;padding-left:0;padding-right:0;" th:text="${users.email}"></td>
+                    </tr>
+                </tbody>
+            </div>
+        </table>
+    </div><br>
+
+<!--  This is the total number of accounts displayed for ADMIN & OWNER  -->
+    <div th:if="${user.permission=='OWNER'} OR ${user.permission=='ADMIN'}"
+         th:text="'The total current number of accounts registered excluding the Administrator, Owner and Test is: ' + ${userList.size-3} + '.'"
+         style="margin:10px;text-align:left;
+                font-family:'Jazz LET',sans-serif;font-size:17px;font-weight:normal;width:fit-content;
+                height:fit-content;background-color:lightblue;border:1px solid black;border-radius:5px;
+                padding:5px;"></div>
+</div>
+
+<div id="placeFooter" th:insert="footer :: footer_template"></div>
+<script th:inline="javascript">
+    function confirmDelete() {
+
+        var x = confirm("Are you sure you want to delete?");
+        if (x)
+            return true;
+        else
+            return false;
+
+    }
+</script>
+</body>
+</html>

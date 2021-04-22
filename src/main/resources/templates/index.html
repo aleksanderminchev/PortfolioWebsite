@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Catalin's Blog</title>
+    <link rel="stylesheet" href="/static/design.css" th:href="@{/design.css}">
+</head>
+<body>
+<div th:replace="menu :: menu_template"></div>
+<div th:if="${user.email==null}"id="separation3"><div id="registerColumn"><p id="registerParagraph">Not a member of our website yet? You can register <a href="/register">here</a>.</p></div></div>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+<div id="Home">
+<p>You're home now.</p>
+<p>Relax and take a sip of tea.</p>
+</div>
+<div id="placeFooter" th:insert="footer :: footer_template"></div>
+</body>
+</html>

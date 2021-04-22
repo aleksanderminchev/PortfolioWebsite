@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Catalin's Articles</title>
+    <link rel="stylesheet" href="/static/design.css" th:href="@{/design.css}">
+</head>
+<body>
+<div id="TOP"><div th:replace="menu :: menu_template"></div></div>
+<div id="separation2">
+    <div id="c1.2"><a href="/index"><button class="btn-Home" id="btn-Home">HOME</button></a></div>
+    <div id="c3.2"><a href="/articles"><button id="btn-Return">Return</button></a></div>
+</div>
+</br>
+</br>
+<div style="margin-left: 200px;margin-right:200px;">
+    <table style="border:none;width:unset;">
+
+        <!--  This part manages the table cell(s) for the ARTICLE TITLE & BODY  -->
+        <thead>
+            <tr>
+                <th style="color:lightgray;">
+                    <h1 th:text="${article.title}"></h1>
+                </th>
+            </tr>
+        </thead>
+        <br>
+            <tr>
+                <td style="border-bottom-left-radius:20px;border-bottom-right-radius:20px;
+            width:100%;background-color:lightgray;margin-left:10%;margin-right:10%;">
+                    <p th:text="${article.body}"></p>
+                    <div th:each="picture:${picturesList}">
+                        <img th:src="@{'/displayImage/'+${picture.pictureId}}" style="display:block;width:100%;height:100%;">
+                    </div>
+                </td>
+
+            </tr>
+            <!--  This part manages the table cell(s) to DISPLAY COMMENTS  -->
+            <tr th:each="comment,iStat:${comments}"
+                style="background-color:lightgoldenrodyellow;width:50%;float:left;padding:3px;
+                margin:10px;border-radius:20px;">
+                <td>
+                    <p th:text="${userList[iStat.index].email} + ' wrote:'"
+                       style="color:darkslategray;text-align:left;font-size:13px;
+                        font-weight:bold;margin-top:2px;margin-bottom:2px;padding-left:10px;"></p>
+                    <p th:text="${comment.comment}" style="font-size:18px;font-weight:lighter;
+                    font-family: sans-serif;padding-left:10px;" th:id="data1"></p>
+                    <div style="alignment:left;object-position:left" th:if="${userList[iStat.index].email==user.email} AND ${user.permission=='USER'}">
+                        <a style="float:left!important;margin-left:0;object-position:left;" th:href="@{'/deleteComment/'+${comment.commentId} }">
+                            <button style="float:left;margin-left:5px;background-color:lightgoldenrodyellow;border-radius:5px;" onclick="return confirmDelete()">Delete comment</button>
+                        </a>
+                    </div>
+                    <div th:if="${user.permission=='ADMIN'} OR ${user.permission=='OWNER'}">
+                        <a th:href="@{'/deleteComment/'+${comment.commentId}}">
+                            <button style="float:left;margin-left:5px;background-color:lightgoldenrodyellow;border-radius:5px;" onclick="return confirmDelete()">Delete comment</button>
+                        </a>
+                    </div>
+
+                </td>
+            </tr>
+
+            <!--  This part manages the table cell(s) to POST NEW COMMENT -->
+            <tr style="width:50%;float:left;padding:3px;
+                margin:5px;border-radius:10px;">
+                <td>
+                    <form th:if="${user.email!=null}" action="/postComment" method="post" style="margin-top:5px;margin-bottom:5px;
+                    border-left:5px;border-right:5px;margin-left:25%;">
+                        <input type="hidden" name="comment_id">
+                        <textarea datatype="text" name="comment" rows="3"
+                                  cols="48" wrap="hard" placeholder="- write your opinion here -"
+                                  style="text-align:center;background-color: ghostwhite;border-radius:5px;"></textarea>
+                        <input type="hidden" name="articleId" th:value="${article.articleId}">
+                        <input type="hidden" name="userId" th:value="${user.userId}">
+                        <a href="/">
+                            <input type="submit" value="Input Comment" style="background-color:lightgoldenrodyellow;border-radius:5px;">
+                        </a>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div id="placeFooter" th:insert="footer :: footer_template"></div>
+<script th:inline="javascript">
+    function confirmDelete() {
+        var x = confirm("Are you sure you want to delete?");
+            if (x)
+                return true;
+            else
+                return false;
+
+        }
+
+
+</script>
+</body>
+</html>

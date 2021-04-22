@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Catalin's Articles</title>
+    <link rel="stylesheet" href="/static/design.css" th:href="@{/design.css}">
+</head>
+<body>
+<div th:replace="menu :: menu_template"></div>
+<div id="separation2">
+    <div id="c1.2"><a href="/index"><button class="btn-Home" id="btn-Home">HOME</button></a></div>
+    <div id="c2.2">
+        <div><a th:if="${user.permission}==OWNER" href="/CreateArticle"><button id="btn-CreateArticle">NEW</button></a></div>
+        <div><a th:if="${user.permission}==ADMIN" href="/CreateArticle"><button id="btn-CreateArticle">NEW</button></a></div>
+    </div>
+</div>
+</br>
+</br>
+<div class="row" style="margin-top:100px;">
+
+<!--  Here is the column showing the TECH ARTICLES  -->
+    <div class="column">
+        <table th:each="articlesTech:${articlesTech}" style="margin-bottom:100px;">
+            <h1>Tech Articles</h1>
+            <thead>
+                <tr>
+                    <th th:text="${articlesTech.title}"></th>
+                </tr>
+            </thead>
+            <tbody style="background-color:lightgray;">
+                <tr>
+                    <td id="showArticles" th:text="${articlesTech.body}"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <a th:href="@{'/viewOne/' + ${articlesTech.articleId}}">
+                            <button style="background-color:lightgoldenrodyellow;border-radius:5px;">View Article</button>
+                        </a>
+                        <div style="margin-top:10px;margin-bottom:10px;" th:switch="${user.permission}">
+                            <div th:case="ADMIN">
+                                <a th:href="@{'/ModifyArticle/'+${articlesTech.articleId}}">
+                                    <button style="background-color:lightgoldenrodyellow;border-radius:5px;float:left;margin-left:205px;margin-bottom:5px;">Modify</button>
+                                </a>
+                                <a th:method="delete" th:href="@{'/deleteArticle/'+${articlesTech.articleId}}">
+                                    <button style="background-color:lightgoldenrodyellow;border-radius:5px;float:right;margin-right:195px;margin-bottom:5px;" onclick="return confirmDelete()">Remove</button>
+                                </a>
+                            </div>
+                            <div th:case="OWNER">
+                                <a href="/updateArticle">
+                                    <button style="background-color:lightgoldenrodyellow;border-radius:5px;float:left;margin-left:205px;margin-bottom:5px;">Modify</button>
+                                </a>
+                                <a  th:href="@{'/deleteArticle/' + ${articlesTech.articleId}}" method="DELETE">
+                                    <button style="background-color:lightgoldenrodyellow;border-radius:5px;float:right;margin-right:195px;margin-bottom:5px;" onclick="return confirmDelete()">Remove</button>
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+<!--  Here is the column showing the MODELLING ARTICLES  -->
+    <div class="column">
+        <table th:each="articlesModelling:${articlesModelling}" style="margin-bottom:100px;">
+            <h1>Modelling Articles</h1>
+            <thead>
+                <tr>
+                    <th th:text="${articlesModelling.title}"></th>
+                </tr>
+            </thead>
+            <tbody style="background-color:lightgray;">
+                <tr>
+                    <td id="showArticles" th:text="${articlesModelling.body}"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <a th:href="@{'/viewOne/' + ${articlesModelling.articleId}}">
+                            <button style="background-color:lightgoldenrodyellow;border-radius:5px;">View Article</button>
+                        </a>
+                        <div style="margin-top:10px;margin-bottom:10px;" th:switch="${user.permission}">
+                            <div th:case="ADMIN">
+                                <a th:href="@{'/ModifyArticle/'+${articlesModelling.articleId}}">
+                                    <button style="background-color:lightgoldenrodyellow;border-radius:5px;float:left;margin-left:205px;margin-bottom:5px;">Modify</button>
+                                </a>
+                                <a th:method="delete" th:href="@{'/deleteArticle/'+${articlesModelling.articleId}}">
+                                    <button style="background-color:lightgoldenrodyellow;border-radius:5px;float:right;margin-right:195px;margin-bottom:5px;" onclick="return confirmDelete()">Remove</button>
+                                </a>
+                            </div>
+                            <div th:case="OWNER">
+                                <a th:href="@{'/ModifyArticle/'+${articlesModelling.articleId}}">
+                                    <button style="background-color:lightgoldenrodyellow;border-radius:5px;float:left;margin-left:205px;margin-bottom:5px;">Modify</button>
+                                </a>
+                                <a th:method="delete" th:href="@{'/deleteArticle/'+${articlesModelling.articleId}}">
+                                    <button style="background-color:lightgoldenrodyellow;border-radius:5px;float:right;margin-right:195px;margin-bottom:5px;" onclick="return confirmDelete()">Remove</button>
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="placeFooter" th:insert="footer :: footer_template"></div>
+
+<script th:inline="javascript">
+    function confirmDelete() {
+
+        var x = confirm("Are you sure you want to delete?");
+        if (x)
+            return true;
+        else
+            return false;
+
+    }
+    </script>
+</body>
+</html>

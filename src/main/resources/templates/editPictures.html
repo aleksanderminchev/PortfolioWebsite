@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Catalin's Articles</title>
+    <link rel="stylesheet" href="/static/design.css" th:href="@{/design.css}">
+</head>
+<body>
+<div id="TOP"><div th:replace="menu :: menu_template"></div></div>
+<div id="separation2">
+    <div id="c1.2"><a href="/index"><button class="btn-Home" id="btn-Home">HOME</button></a></div>
+    <div id="c5.2"><a href="/articles"><button id="btn-noPicture">Don't add picture(s)</button></a></div>
+</div>
+</br>
+</br>
+
+<table th:each="picture:${pictures}">
+    <thead>
+    <tr>Picture Id:</tr>
+    <tr>Picture:</tr>
+    </thead>
+    <tbody>
+    <td th:text="${picture.pictureId}"></td>
+    <td><img th:src="@{'/displayImage/'+${picture.pictureId}}"></td>
+    <td><a th:href="@{'/deleteImage/'+${picture.pictureId}}"><button onclick="return confirmDelete()">Delete Picture</button></a>
+    </td>
+
+    </tbody>
+</table>
+<form method="post" enctype="multipart/form-data" th:action="@{/upload}"
+      style="background-color:lightgray;padding:10px;margin-left:39.5%;margin-right:39.5%;border:1px solid black;border-radius:10px;
+             width:fit-content;font-family:'Jazz LET', sans-serif;font-weight:bold;text-align:center;font-size:20px;
+             color:darkslategray;">
+    <br>
+    <div th:if="${pictures==null}"><label style="margin:6px;">Your article was created. :)</label><br><br>
+    <label style="margin:6px;">Do you want to add any picture(s)?</label><br><br>
+    </div>
+    <input type="file" th:name="content" style="margin:6px;">
+    <input type="hidden" name="articleId" th:value="${article.articleId}">
+    <input type="submit" value="Add picture" style="background-color:lightgoldenrodyellow;border-radius:5px;margin:6px;"><br><br>
+</form>
+<div id="placeFooter" th:insert="footer :: footer_template"></div>
+<script th:inline="javascript">
+    function confirmDelete() {
+
+        var x = confirm("Are you sure you want to delete?");
+        if (x)
+            return true;
+        else
+            return false;
+
+    }
+    </script>
+</body>
+</html>
